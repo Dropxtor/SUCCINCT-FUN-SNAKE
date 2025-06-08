@@ -210,13 +210,14 @@ const WalletConnect = ({ onWalletConnected, onWalletDisconnected }) => {
             <p className="mt-1">
               Need MON tokens? Visit{' '}
               <a 
-                href="https://www.monad.xyz/post/monad-testnet-onboarding-guide" 
+                href="https://testnet.monad.xyz" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-cyan-400 hover:text-cyan-300 underline"
+                className="text-cyan-400 hover:text-cyan-300 underline animate-pulse"
               >
                 Monad Faucet
               </a>
+              {' '}just for fun! 🚀
             </p>
           </div>
         </div>
