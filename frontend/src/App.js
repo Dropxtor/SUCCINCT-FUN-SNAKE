@@ -191,9 +191,9 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Enhanced Wallet Connection */}
-          <div className="mb-8">
-            <WalletConnect 
+          {/* Rainbow AppKit Wallet Connection */}
+          <div className="mb-8 flex justify-center">
+            <SmartWalletConnect 
               onWalletConnected={handleWalletConnected}
               onWalletDisconnected={handleWalletDisconnected}
             />
