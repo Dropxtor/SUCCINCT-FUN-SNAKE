@@ -1,6 +1,9 @@
+/* Import Succinct-themed fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -35,7 +38,77 @@ code {
   color: #61dafb;
 }
 
-/* Glitch Animations */
+/* Succinct-themed typography */
+.succinct-font {
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.succinct-title {
+  font-family: 'Orbitron', monospace;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.succinct-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Succinct logo animations */
+.succinct-logo-container {
+  position: relative;
+}
+
+.succinct-logo-pulse {
+  animation: succinct-logo-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes succinct-logo-glow {
+  0% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+    transform: scale(1);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.8), 0 0 60px rgba(219, 39, 119, 0.5);
+    transform: scale(1.05);
+  }
+}
+
+.succinct-button {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.succinct-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.succinct-button:hover::before {
+  left: 100%;
+}
+
+.succinct-wallet-connected,
+.succinct-wallet-connect {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Enhanced Glitch Animations */
 @keyframes glitch {
   0% {
     transform: translate(0);
@@ -89,7 +162,43 @@ code {
   animation: glitch-text 0.5s infinite;
 }
 
-/* Blob Animation */
+/* Succinct-specific glitch effect */
+@keyframes succinct-glitch {
+  0% {
+    text-shadow: 0 0 0 #8b5cf6, 0 0 0 #ec4899;
+    transform: translate(0);
+  }
+  10% {
+    text-shadow: -3px 0 0 #8b5cf6, 3px 0 0 #ec4899;
+    transform: translate(-1px, 1px);
+  }
+  20% {
+    text-shadow: 3px 0 0 #8b5cf6, -3px 0 0 #ec4899;
+    transform: translate(1px, -1px);
+  }
+  30% {
+    text-shadow: 0 0 0 #8b5cf6, 0 0 0 #ec4899;
+    transform: translate(0);
+  }
+  40% {
+    text-shadow: -2px 0 0 #06b6d4, 2px 0 0 #f59e0b;
+    transform: translate(-1px, -1px);
+  }
+  50% {
+    text-shadow: 2px 0 0 #06b6d4, -2px 0 0 #f59e0b;
+    transform: translate(1px, 1px);
+  }
+  100% {
+    text-shadow: 0 0 0 #8b5cf6, 0 0 0 #ec4899;
+    transform: translate(0);
+  }
+}
+
+.succinct-title.glitch-text {
+  animation: succinct-glitch 0.6s infinite;
+}
+
+/* Enhanced Blob Animation */
 @keyframes blob {
   0% {
     transform: translate(0px, 0px) scale(1);
@@ -117,13 +226,27 @@ code {
   animation-delay: 4s;
 }
 
-/* Neon Glow Effects */
+/* Succinct Neon Glow Effects */
 .neon-glow {
   box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor, 0 0 20px currentColor;
 }
 
 .neon-text {
   text-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor, 0 0 20px currentColor;
+}
+
+.succinct-glow {
+  box-shadow: 
+    0 0 10px rgba(139, 92, 246, 0.6),
+    0 0 20px rgba(139, 92, 246, 0.4),
+    0 0 30px rgba(139, 92, 246, 0.2);
+}
+
+.succinct-text-glow {
+  text-shadow: 
+    0 0 10px rgba(139, 92, 246, 0.8),
+    0 0 20px rgba(139, 92, 246, 0.6),
+    0 0 30px rgba(139, 92, 246, 0.4);
 }
 
 /* Scrollbar Styling */
@@ -137,12 +260,12 @@ code {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #06b6d4, #8b5cf6);
+  background: linear-gradient(45deg, #8b5cf6, #ec4899);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, #0891b2, #7c3aed);
+  background: linear-gradient(45deg, #7c3aed, #db2777);
 }
 
 /* Pulse Animation for scores */
@@ -162,22 +285,71 @@ code {
   animation: score-pulse 0.3s ease-in-out;
 }
 
+/* Snake game enhancements */
+@keyframes snake-segment-glow {
+  0% {
+    box-shadow: 0 0 10px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+  100% {
+    box-shadow: 0 0 10px currentColor;
+  }
+}
+
+.snake-segment {
+  animation: snake-segment-glow 2s ease-in-out infinite;
+}
+
+/* Floating elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
-  .App-header h1 {
+  .succinct-title {
     font-size: 3rem;
+  }
+  
+  .succinct-subtitle {
+    font-size: 1.5rem;
   }
   
   canvas {
     max-width: 100%;
     height: auto;
   }
+
+  .succinct-font {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .succinct-title {
+    font-size: 2rem;
+  }
+  
+  .succinct-subtitle {
+    font-size: 1.2rem;
+  }
 }
 
 /* Focus styles for accessibility */
 button:focus,
 a:focus {
-  outline: 2px solid #06b6d4;
+  outline: 2px solid #8b5cf6;
   outline-offset: 2px;
 }
 
@@ -223,4 +395,104 @@ a:focus {
 
 .game-over-text {
   animation: game-over-glow 2s infinite;
+}
+
+/* Succinct Snake specific animations */
+@keyframes succinct-snake-move {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(5px) translateY(-2px);
+  }
+  50% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(5px) translateY(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.succinct-snake-animation {
+  animation: succinct-snake-move 1s ease-in-out infinite;
+}
+
+/* Backdrop blur utility */
+.backdrop-blur-succinct {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Custom gradient text */
+.gradient-text-succinct {
+  background: linear-gradient(45deg, #8b5cf6, #ec4899, #06b6d4);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Holographic effect */
+.holographic {
+  background: linear-gradient(45deg, 
+    rgba(139, 92, 246, 0.1),
+    rgba(236, 72, 153, 0.1),
+    rgba(6, 182, 212, 0.1),
+    rgba(245, 158, 11, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: holographic-shift 4s ease infinite;
+  position: relative;
+}
+
+@keyframes holographic-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.holographic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: holographic-scan 3s ease-in-out infinite;
+}
+
+@keyframes holographic-scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
