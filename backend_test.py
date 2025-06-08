@@ -24,11 +24,11 @@ print(f"Testing against backend URL: {BACKEND_URL}")
 print(f"API URL: {API_URL}")
 print(f"Socket URL: {SOCKET_URL}")
 
-# Test wallet addresses
+# Test wallet addresses (Monad testnet format)
 TEST_WALLETS = [
-    "0x1234567890123456789012345678901234567890",
-    "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-    "0x9876543210987654321098765432109876543210"
+    "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",  # Monad testnet wallet format
+    "0x2546BcD3c84621e976D8185a91A922aE77ECEc30",  # Monad testnet wallet format
+    "0xbDA5747bFD65F08deb54cb465eB87D40e51B197E"   # Monad testnet wallet format
 ]
 
 # Test data
