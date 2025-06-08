@@ -5,6 +5,7 @@
   "dependencies": {
     "@wagmi/connectors": "^5.8.5",
     "@wagmi/core": "^2.17.3",
+    "@web3modal/siwe": "^5.1.11",
     "@web3modal/wagmi": "^5.1.11",
     "axios": "^1.8.4",
     "cra-template": "1.2.0",
