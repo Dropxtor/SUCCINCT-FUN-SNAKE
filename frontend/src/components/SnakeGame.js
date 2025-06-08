@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import io from 'socket.io-client';
+import { SuccinctSnakeSegment } from './SuccinctLogoNew';
 
 const CANVAS_SIZE = 400;
 const SNAKE_START = [
@@ -18,6 +19,7 @@ const DIRECTIONS = {
 
 const SnakeGame = ({ walletAddress, onGameEnd }) => {
   const canvasRef = useRef(null);
+  const overlayRef = useRef(null);
   const [snake, setSnake] = useState(SNAKE_START);
   const [apple, setApple] = useState(APPLE_START);
   const [dir, setDir] = useState([0, 1]);
@@ -61,15 +63,15 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
     ];
     
     const newParticles = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 15; i++) {
       newParticles.push({
         x: x * SCALE + SCALE / 2,
         y: y * SCALE + SCALE / 2,
-        vx: (Math.random() - 0.5) * 10,
-        vy: (Math.random() - 0.5) * 10,
-        life: 40,
+        vx: (Math.random() - 0.5) * 12,
+        vy: (Math.random() - 0.5) * 12,
+        life: 50,
         color: succinctColors[Math.floor(Math.random() * succinctColors.length)],
-        size: Math.random() * 4 + 2
+        size: Math.random() * 5 + 3
       });
     }
     setParticles(prev => [...prev, ...newParticles]);
@@ -168,7 +170,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
           y: p.y + p.vy,
           vy: p.vy + 0.3,
           life: p.life - 1,
-          size: p.size * 0.98
+          size: p.size * 0.99
         })).filter(p => p.life > 0)
       );
     }, 50);
@@ -215,7 +217,82 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
     return () => document.removeEventListener('keydown', moveSnake);
   }, [moveSnake]);
 
-  // Draw game with Succinct styling
+  // Update Snake overlay with Succinct logos
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+
+    // Clear previous snake elements
+    overlay.innerHTML = '';
+
+    // Render snake with Succinct logos
+    snake.forEach((segment, index) => {
+      const isHead = index === snake.length - 1;
+      const segmentDiv = document.createElement('div');
+      segmentDiv.style.position = 'absolute';
+      segmentDiv.style.left = `${segment[0] * SCALE + 2}px`;
+      segmentDiv.style.top = `${segment[1] * SCALE + 2}px`;
+      segmentDiv.style.width = `${SCALE - 4}px`;
+      segmentDiv.style.height = `${SCALE - 4}px`;
+      segmentDiv.style.zIndex = '10';
+      
+      if (isHead) {
+        segmentDiv.innerHTML = `
+          <div style="
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(45deg, #8b5cf6, #ec4899); 
+            border-radius: 4px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
+            border: 1px solid #06b6d4;
+          ">
+            <svg viewBox="0 0 100 100" style="width: 80%; height: 80%;">
+              <circle cx="50" cy="50" r="35" fill="none" stroke="#06b6d4" stroke-width="4"/>
+              <path d="M 30,35 Q 20,35 20,45 Q 20,50 30,50 Q 70,50 70,55 Q 70,65 80,65" 
+                    fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="25" cy="40" r="2" fill="#06b6d4"/>
+              <circle cx="75" cy="60" r="2" fill="#ec4899"/>
+              <circle cx="50" cy="50" r="2" fill="#ffffff"/>
+            </svg>
+          </div>
+        `;
+      } else {
+        const progress = index / (snake.length - 1);
+        const hue = 271 + (progress * 100);
+        const saturation = 91 - (progress * 20);
+        const lightness = 65 - (progress * 30);
+        
+        segmentDiv.innerHTML = `
+          <div style="
+            width: 100%; 
+            height: 100%; 
+            background: linear-gradient(45deg, hsl(${hue}, ${saturation}%, ${lightness}%), hsl(${hue + 30}, ${saturation}%, ${lightness}%)); 
+            border-radius: 2px;
+            box-shadow: 0 0 8px hsla(${hue}, ${saturation}%, ${lightness}%, 0.6);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          ">
+            <div style="
+              width: 60%; 
+              height: 60%; 
+              background: radial-gradient(circle, #06b6d4, transparent);
+              border-radius: 50%;
+              opacity: 0.8;
+            "></div>
+          </div>
+        `;
+      }
+      
+      overlay.appendChild(segmentDiv);
+    });
+  }, [snake]);
+
+  // Draw game background and apple with enhanced canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -253,52 +330,13 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       ctx.stroke();
     }
 
-    // Draw snake with Succinct gradient
-    snake.forEach((segment, index) => {
-      const isHead = index === snake.length - 1;
-      const progress = index / (snake.length - 1);
-      
-      // Succinct gradient colors
-      const hue = 271 + (progress * 100); // Purple to cyan range
-      const saturation = 91 - (progress * 20);
-      const lightness = 65 - (progress * 30);
-      
-      ctx.shadowBlur = isHead ? 30 : 15;
-      ctx.shadowColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-      
-      if (zkProofEffect) {
-        ctx.shadowBlur = 40;
-        ctx.shadowColor = '#8b5cf6';
-      }
-      
-      ctx.fillRect(segment[0] * SCALE + 2, segment[1] * SCALE + 2, SCALE - 4, SCALE - 4);
-      
-      // Inner glow for head
-      if (isHead) {
-        ctx.shadowBlur = 5;
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(segment[0] * SCALE + 8, segment[1] * SCALE + 8, SCALE - 16, SCALE - 16);
-        
-        // Add "S" for Succinct on head
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#000000';
-        ctx.font = '12px Orbitron, monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText('S', 
-          segment[0] * SCALE + SCALE/2, 
-          segment[1] * SCALE + SCALE/2 + 4
-        );
-      }
-    });
-
-    // Draw apple with Succinct branding
+    // Draw apple with enhanced Succinct branding
     const time = Date.now() * 0.01;
     const pulseScale = 1 + Math.sin(time) * 0.3;
     const appleSize = SCALE * pulseScale;
     const offset = (SCALE - appleSize) / 2;
     
-    // Multi-color Succinct apple
+    // Multi-layer apple with Succinct logo
     const gradient = ctx.createRadialGradient(
       apple[0] * SCALE + SCALE/2, 
       apple[1] * SCALE + SCALE/2, 
@@ -321,12 +359,28 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       appleSize
     );
 
-    // Draw particles with Succinct colors
+    // Draw small Succinct logo in apple
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    const centerX = apple[0] * SCALE + SCALE/2;
+    const centerY = apple[1] * SCALE + SCALE/2;
+    ctx.arc(centerX, centerY, SCALE/4, 0, 2 * Math.PI);
+    ctx.stroke();
+    
+    // Draw "S" in apple
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `${SCALE/2}px Orbitron, monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText('S', centerX, centerY + SCALE/6);
+
+    // Draw particles with enhanced effects
     particles.forEach(particle => {
       ctx.shadowBlur = 15;
       ctx.shadowColor = particle.color;
       ctx.fillStyle = particle.color;
-      const size = particle.size * (particle.life / 40);
+      const size = particle.size * (particle.life / 50);
       ctx.fillRect(
         particle.x - size/2, 
         particle.y - size/2, 
@@ -337,7 +391,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
     // Reset shadow
     ctx.shadowBlur = 0;
-  }, [snake, apple, glitchEffect, particles, zkProofEffect]);
+  }, [apple, glitchEffect, particles, zkProofEffect]);
 
   return (
     <div className="flex flex-col items-center space-y-4 p-6">
@@ -367,6 +421,13 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
           className={`border-2 ${zkProofEffect ? 'border-purple-400 shadow-purple-400/50' : 'border-cyan-400 shadow-cyan-400/50'} rounded-lg shadow-lg ${glitchEffect ? 'animate-ping' : ''} succinct-glow`}
         />
         
+        {/* Snake overlay with Succinct logos */}
+        <div 
+          ref={overlayRef}
+          className="absolute inset-0 pointer-events-none"
+          style={{ top: 0, left: 0 }}
+        ></div>
+        
         {/* Game Over Overlay */}
         {gameOver && (
           <div className="absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center rounded-lg backdrop-blur-succinct">
@@ -394,6 +455,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
                 SUCCINCT SNAKE
               </h2>
               <p className="text-lg mb-2">Use arrow keys to control</p>
+              <p className="text-sm mb-4 text-purple-300">Snake head features the real Succinct logo!</p>
               <p className="text-sm mb-6 text-purple-300">Powered by ZK proofs & Monad network</p>
               <button 
                 onClick={startGame}
@@ -416,7 +478,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       {/* Controls Info */}
       <div className="text-center text-gray-400 text-sm">
         <p className="succinct-font">Use ↑ ↓ ← → keys to control the snake</p>
-        <p className="mt-1">Collect the glowing orbs to increase your score! 🌟</p>
+        <p className="mt-1">Snake head contains the real Succinct logo! 🌟</p>
         <p className="mt-1 text-purple-400 text-xs">Every score is verified with zero-knowledge proofs</p>
       </div>
     </div>
