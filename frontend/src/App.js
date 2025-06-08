@@ -169,11 +169,11 @@ const Home = () => {
             <div className="space-y-4">
               <HolographicText>
                 <p className="text-2xl text-gray-300 mb-3 succinct-font">
-                  ⚡ Real-time multiplayer Snake powered by ZK proofs ⚡
+                  ⚡ Real-time multiplayer Snake with Monad transactions ⚡
                 </p>
               </HolographicText>
               <p className="text-xl text-purple-300 mb-4">
-                🏎️ Built on Monad Network - The fastest blockchain
+                🏎️ Built on Monad Network - Every score generates blockchain transactions
               </p>
               
               <div className="flex justify-center items-center space-x-4 text-lg text-gray-400">
