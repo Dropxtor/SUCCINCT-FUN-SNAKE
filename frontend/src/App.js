@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SnakeGame from "./components/SnakeGame";
-import WalletConnect from "./components/WalletConnect";
+import SmartWalletConnect from "./components/SmartWalletConnect";
 import Leaderboard from "./components/Leaderboard";
 import SuccinctLogoNew from "./components/SuccinctLogoNew";
+import RainbowAppKitProvider from "./components/RainbowAppKitProvider";
 import { 
   DigitalRain, 
   FloatingGeometry, 
