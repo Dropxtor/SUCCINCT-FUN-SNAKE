@@ -264,33 +264,52 @@ const Home = () => {
               </FuturisticCard>
 
               {/* Advanced Game Info */}
-              <FuturisticCard title="SUCCINCT FEATURES" glowing animated>
+              <FuturisticCard title="MONAD FEATURES" glowing animated>
                 <ul className="space-y-4 text-gray-300 text-sm">
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-cyan-400 rounded-full animate-pulse neural-pulse"></div>
-                    <span>⚡ Real-time multiplayer</span>
+                    <span>🔗 Real Monad transactions</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-purple-400 rounded-full animate-pulse quantum-effect"></div>
-                    <span>🔗 Blockchain score storage</span>
+                    <span>💰 Score milestones → blockchain</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-pink-400 rounded-full animate-pulse holographic-shimmer"></div>
-                    <span>✨ Zero-knowledge proofs</span>
+                    <span>✨ ZK proof integration</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse matrix-cascade"></div>
-                    <span>🏎️ Monad network speed</span>
+                    <span>🏎️ Lightning-fast network</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-yellow-400 rounded-full animate-pulse"></div>
-                    <span>🎮 Succinct-powered gaming</span>
+                    <span>🎮 Rainbow AppKit wallet</span>
                   </li>
                   <li className="flex items-center space-x-3">
                     <SuccinctLogoNew size="small" animated={true} />
                     <span>🐍 Real Succinct logo in snake!</span>
                   </li>
                 </ul>
+                
+                {/* Enhanced transaction info */}
+                <div className="mt-6 pt-4 border-t border-gray-700">
+                  <p className="text-xs text-gray-400 mb-3 succinct-font">Transaction Schedule</p>
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Every 50 points:</span>
+                      <span className="text-green-400">✅ Milestone TX</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Game over:</span>
+                      <span className="text-blue-400">📄 Final TX</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Gas fees:</span>
+                      <span className="text-yellow-400">💰 ~0.001 MON</span>
+                    </div>
+                  </div>
+                </div>
                 
                 {/* Enhanced Succinct stickers integration */}
                 <div className="mt-6 pt-4 border-t border-gray-700">
