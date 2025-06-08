@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SnakeGame from "./components/SnakeGame";
-import WalletConnect from "./components/WalletConnect";
+import RainbowWalletConnect from "./components/RainbowWalletConnect";
 import Leaderboard from "./components/Leaderboard";
-import SuccinctLogo, { SuccinctOrb, SuccinctSnakeLogo } from "./components/SuccinctLogo";
+import SuccinctLogoNew, { SuccinctOrb, SuccinctSnakeLogo } from "./components/SuccinctLogoNew";
+import RainbowProvider from "./components/RainbowProvider";
 import { 
   DigitalRain, 
   FloatingGeometry, 
@@ -143,15 +144,6 @@ const Home = () => {
           </div>
         ))}
 
-        {/* Holographic overlay */}
-        <div 
-          className="absolute inset-0 opacity-10 holographic-shimmer"
-          style={{
-            backgroundImage: `url('https://images.pexels.com/photos/8108728/pexels-photo-8108728.jpeg')`,
-            mixBlendMode: 'overlay'
-          }}
-        ></div>
-
         {/* Floating Succinct orbs with enhanced effects */}
         <SuccinctOrb className="absolute top-20 left-20 animate-bounce neural-pulse" size="small" />
         <SuccinctOrb className="absolute top-40 right-32 animate-pulse quantum-effect" size="medium" />
@@ -165,7 +157,7 @@ const Home = () => {
           <div className="text-center mb-8">
             {/* Enhanced logo and title section */}
             <div className="flex items-center justify-center space-x-6 mb-8">
-              <SuccinctLogo size="xlarge" animated={true} className="float" />
+              <SuccinctLogoNew size="xlarge" animated={true} className="float" />
               <div className="text-left">
                 <HolographicText>
                   <h1 className={`text-8xl font-bold ${showGlitch ? 'cyber-glitch gradient-text-succinct' : 'text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400'} transition-all duration-300 succinct-title`}>
@@ -208,9 +200,9 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Enhanced Wallet Connection */}
+          {/* Enhanced Rainbow Wallet Connection */}
           <div className="mb-8">
-            <WalletConnect 
+            <RainbowWalletConnect 
               onWalletConnected={handleWalletConnected}
               onWalletDisconnected={handleWalletDisconnected}
             />
@@ -262,6 +254,13 @@ const Home = () => {
                     <span className="text-gray-400">ZK Proofs:</span>
                     <span className="text-purple-400 zk-proof-effect">✅ Verified</span>
                   </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-400">Snake Head:</span>
+                    <div className="flex items-center space-x-2">
+                      <SuccinctLogoNew size="small" animated={false} />
+                      <span className="text-cyan-400 text-sm">Real Logo!</span>
+                    </div>
+                  </div>
                 </div>
               </FuturisticCard>
 
@@ -295,6 +294,10 @@ const Home = () => {
                   <li className="flex items-center space-x-3">
                     <div className="w-4 h-4 bg-yellow-400 rounded-full animate-pulse"></div>
                     <span>🎮 Succinct-powered gaming</span>
+                  </li>
+                  <li className="flex items-center space-x-3">
+                    <SuccinctLogoNew size="small" animated={true} />
+                    <span>🐍 Real Succinct logo in snake!</span>
                   </li>
                 </ul>
                 
@@ -333,7 +336,7 @@ const Home = () => {
             <FuturisticCard className="max-w-4xl mx-auto" glowing animated>
               <div className="mb-8">
                 <div className="flex justify-center mb-6">
-                  <SuccinctLogo size="xlarge" animated={true} className="float neural-pulse" />
+                  <SuccinctLogoNew size="xlarge" animated={true} className="float neural-pulse" />
                 </div>
                 <div className="text-9xl mb-8 animate-bounce">🐍</div>
               </div>
@@ -355,7 +358,7 @@ const Home = () => {
               <div className="grid grid-cols-2 gap-6 text-lg text-gray-300 mb-8">
                 <FuturisticCard className="p-8" animated>
                   <div className="text-cyan-400 font-bold text-2xl mb-3">🎮 Real-time</div>
-                  <div>Multiplayer Snake gameplay with instant updates</div>
+                  <div>Multiplayer Snake with <strong>real Succinct logo</strong> as snake head!</div>
                 </FuturisticCard>
                 <FuturisticCard className="p-8" animated>
                   <div className="text-purple-400 font-bold text-2xl mb-3">⛓️ Blockchain</div>
@@ -409,15 +412,17 @@ const Home = () => {
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <RainbowProvider>
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />}>
+              <Route index element={<Home />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </RainbowProvider>
   );
 }
 
