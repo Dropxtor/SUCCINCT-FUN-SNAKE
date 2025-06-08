@@ -210,8 +210,9 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Snake game core mechanics"
     - "WebSocket setup for real-time game"
+    - "Game API endpoints (leaderboard, scores)"
+    - "Snake game core mechanics"
     - "Wallet connection integration"
   stuck_tasks: []
   test_all: false
@@ -219,4 +220,4 @@ test_plan:
 
 agent_communication:
     - agent: "main"
-    - message: "Starting Snake game with Succinct blockchain integration. User wants testnet deployment, wallet connection required, PC and mobile accessible. Need to get Succinct SP1 API key first."
+    - message: "Implemented core Snake game with real-time WebSocket, glitchy design, wallet connection, and leaderboard. Ready for backend testing. Still need Succinct SP1 API key for blockchain integration."
