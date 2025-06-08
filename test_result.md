@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Build an interactive real-time Snake game with Succinct blockchain integration. Features: glitchy + fun design, real-time multiplayer, blockchain high scores, wallet connection required, creator attribution to dropxtor (x.com/0xDropxtor). Deploy on testnet, accessible on PC and mobile."
+user_problem_statement: "Build Succinct Snake - interactive real-time Snake game with Succinct blockchain integration. Features: Monad testnet instead of Sepolia, Succinct branding and animations from https://succinct-pfp-customize.vercel.app/, fun fonts, glitchy + neon design, real-time multiplayer, blockchain high scores, wallet connection required, creator attribution to dropxtor (x.com/0xDropxtor). Accessible on PC and mobile."
 
 backend:
   - task: "WebSocket setup for real-time game"
