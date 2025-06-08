@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@rainbow-me/rainbowkit": "^2.2.6",
+    "@tanstack/react-query": "^5.80.6",
     "@wagmi/connectors": "^5.8.5",
     "@wagmi/core": "^2.17.3",
     "@web3modal/siwe": "^5.1.11",
@@ -15,7 +17,8 @@
     "react-router-dom": "^7.5.1",
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.8.1",
-    "viem": "^2.31.0"
+    "viem": "^2.31.0",
+    "wagmi": "^2.15.6"
   },
   "scripts": {
     "start": "react-scripts start",
