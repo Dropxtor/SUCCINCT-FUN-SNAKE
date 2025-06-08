@@ -129,17 +129,41 @@ backend:
         - agent: "main"
         - comment: "Added leaderboard, score submission, and game stats endpoints"
 
-  - task: "Succinct SP1 blockchain integration"
-    implemented: false
+  - task: "Monad testnet integration"
+    implemented: true
     working: "NA"
-    file: "server.py"
+    file: "src/components/WalletConnect.js"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
         - working: "NA"
         - agent: "main"
-        - comment: "Waiting for user to provide Succinct SP1 API key"
+        - comment: "Replaced Sepolia with Monad testnet (Chain ID: 10143, RPC: https://testnet-rpc.monad.xyz)"
+
+  - task: "Succinct branding and animations"
+    implemented: true
+    working: "NA"
+    file: "src/components/SuccinctLogo.js, src/App.js, src/App.css"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "main"
+        - comment: "Added Succinct logos, animations, stickers integration, custom fonts (Orbitron, Rajdhani, Space Grotesk)"
+
+  - task: "Game name change to Succinct Snake"
+    implemented: true
+    working: "NA"
+    file: "src/App.js, src/components/SnakeGame.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+        - agent: "main"
+        - comment: "Changed from Snake Blockchain to Succinct Snake, added ZK proof effects"
 
 frontend:
   - task: "Snake game core mechanics"
