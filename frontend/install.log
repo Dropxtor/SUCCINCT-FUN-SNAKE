@@ -1,0 +1,26 @@
+yarn add v1.22.22
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+warning "react-scripts > eslint-config-react-app > eslint-plugin-flowtype@8.0.3" has unmet peer dependency "@babel/plugin-syntax-flow@^7.14.5".
+warning "react-scripts > eslint-config-react-app > eslint-plugin-flowtype@8.0.3" has unmet peer dependency "@babel/plugin-transform-react-jsx@^7.14.9".
+warning "react-scripts > react-dev-utils > fork-ts-checker-webpack-plugin@6.5.3" has unmet peer dependency "typescript@>= 2.7".
+warning "react-scripts > eslint-config-react-app > @typescript-eslint/eslint-plugin > tsutils@3.21.0" has unmet peer dependency "typescript@>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta".
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 10 new dependencies.
+info Direct dependencies
+├─ ethers@6.14.3
+└─ socket.io-client@4.8.1
+info All dependencies
+├─ @adraffy/ens-normalize@1.10.1
+├─ @noble/curves@1.2.0
+├─ aes-js@4.0.0-beta.5
+├─ engine.io-client@6.6.3
+├─ engine.io-parser@5.2.3
+├─ ethers@6.14.3
+├─ socket.io-client@4.8.1
+├─ socket.io-parser@4.2.4
+├─ ws@8.17.1
+└─ xmlhttprequest-ssl@2.1.2
+Done in 41.94s.
