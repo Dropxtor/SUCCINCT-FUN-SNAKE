@@ -2,17 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SnakeGame from "./components/SnakeGame";
-import RainbowWalletConnect from "./components/RainbowWalletConnect";
+import WalletConnect from "./components/WalletConnect";
 import Leaderboard from "./components/Leaderboard";
-import SuccinctLogoNew, { SuccinctOrb, SuccinctSnakeLogo } from "./components/SuccinctLogoNew";
-import RainbowProvider from "./components/RainbowProvider";
+import SuccinctLogoNew from "./components/SuccinctLogoNew";
 import { 
   DigitalRain, 
   FloatingGeometry, 
   CyberGrid, 
   NeuralNetwork,
-  HolographicText,
-  HolographicScanner
+  HolographicText
 } from "./components/FuturisticEffects";
 import { FuturisticCard } from "./components/FuturisticUI";
 
@@ -20,7 +18,6 @@ const Home = () => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [currentScore, setCurrentScore] = useState(0);
   const [showGlitch, setShowGlitch] = useState(false);
-  const [cyberMode, setCyberMode] = useState(true);
   const [particles, setParticles] = useState([]);
 
   // Enhanced periodic glitch effect
@@ -65,9 +62,6 @@ const Home = () => {
 
   const handleWalletConnected = (address) => {
     setWalletAddress(address);
-    // Trigger celebration effect
-    setCyberMode(true);
-    setTimeout(() => setCyberMode(false), 2000);
   };
 
   const handleWalletDisconnected = () => {
@@ -107,7 +101,7 @@ const Home = () => {
         {particles.map(particle => (
           <div
             key={particle.id}
-            className={`absolute opacity-40 ${cyberMode ? 'cyber-glitch' : ''}`}
+            className="absolute opacity-40"
             style={{
               left: `${particle.x}%`,
               top: `${particle.y}%`,
@@ -143,17 +137,11 @@ const Home = () => {
             )}
           </div>
         ))}
-
-        {/* Floating Succinct orbs with enhanced effects */}
-        <SuccinctOrb className="absolute top-20 left-20 animate-bounce neural-pulse" size="small" />
-        <SuccinctOrb className="absolute top-40 right-32 animate-pulse quantum-effect" size="medium" />
-        <SuccinctOrb className="absolute bottom-32 left-1/4 animate-ping matrix-cascade" size="small" />
-        <SuccinctOrb className="absolute bottom-20 right-20 animate-bounce holographic-shimmer" size="large" />
       </div>
 
       {/* Futuristic Header */}
       <header className={`relative z-10 p-6 ${showGlitch ? 'cyber-glitch' : ''}`}>
-        <HolographicScanner className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             {/* Enhanced logo and title section */}
             <div className="flex items-center justify-center space-x-6 mb-8">
@@ -165,7 +153,9 @@ const Home = () => {
                   </h1>
                 </HolographicText>
                 <div className="flex items-center space-x-4 mt-2">
-                  <SuccinctSnakeLogo className="succinct-snake-animation" />
+                  <div className="w-32 h-8 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold">🐍</span>
+                  </div>
                   <HolographicText>
                     <span className={`text-4xl font-bold ${showGlitch ? 'text-cyan-500 cyber-glitch' : 'text-white'} succinct-subtitle`}>
                       SNAKE
@@ -200,14 +190,14 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Enhanced Rainbow Wallet Connection */}
+          {/* Enhanced Wallet Connection */}
           <div className="mb-8">
-            <RainbowWalletConnect 
+            <WalletConnect 
               onWalletConnected={handleWalletConnected}
               onWalletDisconnected={handleWalletDisconnected}
             />
           </div>
-        </HolographicScanner>
+        </div>
       </header>
 
       {/* Enhanced Main Content */}
@@ -412,18 +402,18 @@ const Home = () => {
 
 function App() {
   return (
-    <RainbowProvider>
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />}>
-              <Route index element={<Home />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </RainbowProvider>
+    <div className="App">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />}>
+            <Route index element={<Home />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 }
+
+export default App;
 
 export default App;
