@@ -63,11 +63,13 @@ const Home = () => {
 
   const handleWalletConnected = (address) => {
     setWalletAddress(address);
+    console.log('🔗 Wallet connected:', address);
   };
 
   const handleWalletDisconnected = () => {
     setWalletAddress(null);
     setCurrentScore(0);
+    console.log('🔌 Wallet disconnected');
   };
 
   const handleGameEnd = (score) => {
