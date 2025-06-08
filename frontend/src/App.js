@@ -220,7 +220,7 @@ const Home = () => {
             {/* Enhanced Sidebar */}
             <div className="space-y-6">
               {/* Advanced Stats Panel */}
-              <FuturisticCard title="PLAYER STATS" glowing animated>
+              <FuturisticCard title="BLOCKCHAIN PLAYER" glowing animated>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Wallet:</span>
@@ -242,8 +242,8 @@ const Home = () => {
                     </HolographicText>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-400">ZK Proofs:</span>
-                    <span className="text-purple-400 zk-proof-effect">✅ Verified</span>
+                    <span className="text-gray-400">Transactions:</span>
+                    <span className="text-purple-400 zk-proof-effect">✅ Active</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-400">Snake Head:</span>
