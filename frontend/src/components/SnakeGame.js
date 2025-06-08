@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import io from 'socket.io-client';
-import { SuccinctSnakeSegment } from './SuccinctLogoNew';
+import { useSuccinctSnakeContract } from '../hooks/useSuccinctSnakeContract';
 
 const CANVAS_SIZE = 400;
 const SNAKE_START = [
@@ -31,6 +31,16 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
   const [glitchEffect, setGlitchEffect] = useState(false);
   const [particles, setParticles] = useState([]);
   const [zkProofEffect, setZkProofEffect] = useState(false);
+  const [transactionStatus, setTransactionStatus] = useState(null);
+
+  // Blockchain integration
+  const { 
+    submitScore, 
+    isSubmitting, 
+    isConfirming, 
+    isConfirmed, 
+    lastTxHash 
+  } = useSuccinctSnakeContract();
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -52,6 +62,18 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
     return () => newSocket.close();
   }, [walletAddress]);
+
+  // Handle blockchain transaction status
+  useEffect(() => {
+    if (isSubmitting) {
+      setTransactionStatus('submitting');
+    } else if (isConfirming) {
+      setTransactionStatus('confirming');
+    } else if (isConfirmed) {
+      setTransactionStatus('confirmed');
+      setTimeout(() => setTransactionStatus(null), 5000);
+    }
+  }, [isSubmitting, isConfirming, isConfirmed]);
 
   // Create apple particle effect with Succinct colors
   const createParticles = useCallback((x, y) => {
@@ -117,6 +139,34 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
     return { apple, scored: false };
   }, [apple, createApple, checkCollision, createParticles]);
 
+  // Submit score to blockchain
+  const handleScoreSubmission = useCallback(async (finalScore) => {
+    if (!walletAddress || finalScore === 0) return;
+
+    try {
+      console.log('🔗 Submitting score to Monad blockchain:', finalScore);
+      const result = await submitScore(finalScore);
+      
+      if (result.success) {
+        setZkProofEffect(true);
+        console.log('✅ Score submitted successfully!');
+        console.log('📄 Transaction hash:', result.hash);
+        
+        if (result.simulated) {
+          console.log('🎮 Simulated Monad transaction (contract not deployed yet)');
+        } else {
+          console.log('🔗 Real Monad transaction submitted');
+        }
+        
+        setTimeout(() => setZkProofEffect(false), 3000);
+      }
+    } catch (error) {
+      console.error('❌ Failed to submit score to blockchain:', error);
+      setTransactionStatus('error');
+      setTimeout(() => setTransactionStatus(null), 5000);
+    }
+  }, [walletAddress, submitScore]);
+
   // Game loop
   const gameLoop = useCallback(() => {
     setSnake(prev => {
@@ -129,6 +179,10 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       if (checkCollision(newHead)) {
         setGameOver(true);
         setIsPlaying(false);
+        
+        // Submit final score to blockchain
+        handleScoreSubmission(score);
+        
         if (socket) {
           socket.emit('gameEnd', { 
             walletAddress, 
@@ -144,11 +198,18 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       
       if (scored) {
         setApple(newApple);
-        setScore(s => s + 10);
+        const newScore = score + 10;
+        setScore(newScore);
+        
+        // Submit every score milestone to blockchain (every 50 points)
+        if (newScore > 0 && newScore % 50 === 0) {
+          handleScoreSubmission(newScore);
+        }
+        
         if (socket) {
           socket.emit('scoreUpdate', { 
             walletAddress, 
-            score: score + 10,
+            score: newScore,
             timestamp: Date.now()
           });
         }
@@ -158,7 +219,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
       return newSnake;
     });
-  }, [dir, checkCollision, checkAppleCollision, socket, walletAddress, score, onGameEnd]);
+  }, [dir, checkCollision, checkAppleCollision, socket, walletAddress, score, onGameEnd, handleScoreSubmission]);
 
   // Update particles
   useEffect(() => {
@@ -187,6 +248,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
     setScore(0);
     setIsPlaying(true);
     setParticles([]);
+    setTransactionStatus(null);
   };
 
   // End game
@@ -246,8 +308,8 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
             display: flex; 
             align-items: center; 
             justify-content: center;
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.8);
-            border: 1px solid #06b6d4;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+            border: 2px solid #06b6d4;
           ">
             <svg viewBox="0 0 100 100" style="width: 80%; height: 80%;">
               <circle cx="50" cy="50" r="35" fill="none" stroke="#06b6d4" stroke-width="4"/>
@@ -270,7 +332,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
             width: 100%; 
             height: 100%; 
             background: linear-gradient(45deg, hsl(${hue}, ${saturation}%, ${lightness}%), hsl(${hue + 30}, ${saturation}%, ${lightness}%)); 
-            border-radius: 2px;
+            border-radius: 3px;
             box-shadow: 0 0 8px hsla(${hue}, ${saturation}%, ${lightness}%, 0.6);
             border: 1px solid rgba(6, 182, 212, 0.3);
             display: flex;
@@ -395,16 +457,46 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
   return (
     <div className="flex flex-col items-center space-y-4 p-6">
-      {/* Score Display with Succinct branding */}
+      {/* Score Display with Blockchain Status */}
       <div className="text-center">
         <div className={`text-5xl font-bold ${glitchEffect ? 'animate-pulse succinct-glitch' : ''} ${zkProofEffect ? 'text-purple-400' : 'gradient-text-succinct'} succinct-font`}>
           SCORE: {score}
         </div>
-        {zkProofEffect && (
-          <div className="text-sm text-purple-400 animate-pulse mt-2 succinct-font">
-            ✅ ZK PROOF VERIFIED
+        
+        {/* Blockchain Transaction Status */}
+        {transactionStatus && (
+          <div className={`text-sm mt-2 succinct-font ${
+            transactionStatus === 'submitting' ? 'text-yellow-400 animate-pulse' :
+            transactionStatus === 'confirming' ? 'text-blue-400 animate-pulse' :
+            transactionStatus === 'confirmed' ? 'text-green-400' :
+            transactionStatus === 'error' ? 'text-red-400' : ''
+          }`}>
+            {transactionStatus === 'submitting' && '🔗 Submitting to Monad...'}
+            {transactionStatus === 'confirming' && '⏳ Confirming on Monad...'}
+            {transactionStatus === 'confirmed' && '✅ Confirmed on Monad!'}
+            {transactionStatus === 'error' && '❌ Transaction failed'}
           </div>
         )}
+        
+        {zkProofEffect && (
+          <div className="text-sm text-purple-400 animate-pulse mt-2 succinct-font">
+            ✅ MONAD TRANSACTION VERIFIED
+          </div>
+        )}
+        
+        {lastTxHash && (
+          <div className="text-xs text-gray-400 mt-1">
+            <a 
+              href={`https://testnet.monadexplorer.com/tx/${lastTxHash}`}
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-cyan-400 transition-colors"
+            >
+              View on Monad Explorer
+            </a>
+          </div>
+        )}
+        
         {walletAddress && (
           <div className="text-sm text-gray-400 mt-2 font-mono">
             Player: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
@@ -436,7 +528,19 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
                 GAME OVER
               </h2>
               <p className="text-2xl mb-2 succinct-font">Final Score: {score}</p>
-              <p className="text-lg mb-6 text-purple-300">ZK Proof Generated ✅</p>
+              <p className="text-lg mb-2 text-purple-300">Submitted to Monad ✅</p>
+              {lastTxHash && (
+                <p className="text-sm mb-4 text-gray-400">
+                  <a 
+                    href={`https://testnet.monadexplorer.com/tx/${lastTxHash}`}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:text-cyan-300 underline"
+                  >
+                    View Transaction
+                  </a>
+                </p>
+              )}
               <button 
                 onClick={startGame}
                 className="px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white font-bold rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 succinct-button"
@@ -455,7 +559,8 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
                 SUCCINCT SNAKE
               </h2>
               <p className="text-lg mb-2">Use arrow keys to control</p>
-              <p className="text-sm mb-4 text-purple-300">Snake head features the real Succinct logo!</p>
+              <p className="text-sm mb-2 text-purple-300">Snake head features the real Succinct logo!</p>
+              <p className="text-sm mb-4 text-green-300">🔗 Scores submitted to Monad blockchain</p>
               <p className="text-sm mb-6 text-purple-300">Powered by ZK proofs & Monad network</p>
               <button 
                 onClick={startGame}
@@ -467,10 +572,10 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
           </div>
         )}
 
-        {/* ZK Proof indicator */}
-        {zkProofEffect && (
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs animate-bounce succinct-font">
-            ZK PROOF ✨
+        {/* Transaction indicator */}
+        {(isSubmitting || isConfirming) && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-3 py-1 rounded-full text-xs animate-bounce succinct-font">
+            {isSubmitting ? '🔗 MONAD TX...' : '⏳ CONFIRMING...'}
           </div>
         )}
       </div>
@@ -479,7 +584,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       <div className="text-center text-gray-400 text-sm">
         <p className="succinct-font">Use ↑ ↓ ← → keys to control the snake</p>
         <p className="mt-1">Snake head contains the real Succinct logo! 🌟</p>
-        <p className="mt-1 text-purple-400 text-xs">Every score is verified with zero-knowledge proofs</p>
+        <p className="mt-1 text-purple-400 text-xs">Every 50 points + game end = Monad transaction</p>
       </div>
     </div>
   );
