@@ -358,34 +358,36 @@ const Home = () => {
               </HolographicText>
               
               <p className="text-gray-400 mb-8 text-xl leading-relaxed">
-                The first real-time multiplayer Snake game powered by{' '}
-                <span className="text-purple-400 font-bold holographic-shimmer">Succinct</span> zero-knowledge proofs and{' '}
-                <span className="text-green-400 font-bold quantum-effect">Monad</span> blockchain technology.
+                The first real-time multiplayer Snake game that generates{' '}
+                <span className="text-green-400 font-bold quantum-effect">real Monad transactions</span>{' '}
+                powered by{' '}
+                <span className="text-purple-400 font-bold holographic-shimmer">Succinct</span>{' '}
+                zero-knowledge proofs.
                 <br />
                 <span className="just-for-fun text-lg">Connect your wallet to start playing! 🚀</span>
               </p>
               
               <div className="grid grid-cols-2 gap-6 text-lg text-gray-300 mb-8">
                 <FuturisticCard className="p-8" animated>
-                  <div className="text-cyan-400 font-bold text-2xl mb-3">🎮 Real-time</div>
-                  <div>Multiplayer Snake with <strong>real Succinct logo</strong> as snake head!</div>
+                  <div className="text-cyan-400 font-bold text-2xl mb-3">🔗 Blockchain</div>
+                  <div>Every score milestone generates <strong>real Monad transactions</strong>!</div>
                 </FuturisticCard>
                 <FuturisticCard className="p-8" animated>
-                  <div className="text-purple-400 font-bold text-2xl mb-3">⛓️ Blockchain</div>
-                  <div>Verified high scores on Monad network</div>
+                  <div className="text-purple-400 font-bold text-2xl mb-3">🐍 Snake Head</div>
+                  <div>Features the <strong>real Succinct logo</strong> as head</div>
                 </FuturisticCard>
                 <FuturisticCard className="p-8" animated>
-                  <div className="text-pink-400 font-bold text-2xl mb-3">✨ ZK Proofs</div>
-                  <div>Succinct-powered verification</div>
+                  <div className="text-pink-400 font-bold text-2xl mb-3">🌈 Rainbow Kit</div>
+                  <div>Professional wallet connection with all major wallets</div>
                 </FuturisticCard>
                 <FuturisticCard className="p-8" animated>
                   <div className="text-green-400 font-bold text-2xl mb-3">🏆 Compete</div>
-                  <div>Global leaderboard with rankings</div>
+                  <div>Global leaderboard with blockchain verification</div>
                 </FuturisticCard>
               </div>
 
               {/* Enhanced Succinct stickers showcase */}
-              <div className="flex justify-center space-x-6 opacity-80">
+              <div className="flex justify-center space-x-6 opacity-80 mb-8">
                 <img 
                   src="https://succinct-pfp-customize.vercel.app/stickers/crab_nerd.webp" 
                   alt="Succinct Crab" 
@@ -401,6 +403,14 @@ const Home = () => {
                   alt="Succinct" 
                   className="w-16 h-16 holographic-shimmer"
                 />
+              </div>
+
+              <div className="bg-yellow-900/30 border border-yellow-400/50 rounded-lg p-4 mb-8">
+                <div className="text-yellow-400 font-bold mb-2">🔔 Blockchain Integration Active</div>
+                <p className="text-sm text-gray-300">
+                  This game generates real transactions on Monad testnet! 
+                  Every 50 points and game completion will trigger a blockchain transaction.
+                </p>
               </div>
             </FuturisticCard>
           </div>
