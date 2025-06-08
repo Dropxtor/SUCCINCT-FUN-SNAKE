@@ -28,6 +28,7 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
   const [socket, setSocket] = useState(null);
   const [glitchEffect, setGlitchEffect] = useState(false);
   const [particles, setParticles] = useState([]);
+  const [zkProofEffect, setZkProofEffect] = useState(false);
 
   // Initialize WebSocket connection
   useEffect(() => {
@@ -43,22 +44,32 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
     newSocket.on('scoreUpdate', (data) => {
       console.log('Score updated:', data);
+      setZkProofEffect(true);
+      setTimeout(() => setZkProofEffect(false), 1000);
     });
 
     return () => newSocket.close();
   }, [walletAddress]);
 
-  // Create apple particle effect
+  // Create apple particle effect with Succinct colors
   const createParticles = useCallback((x, y) => {
+    const succinctColors = [
+      'hsl(271, 91%, 65%)', // purple
+      'hsl(333, 71%, 57%)', // pink
+      'hsl(197, 71%, 52%)', // cyan
+      'hsl(45, 93%, 47%)'   // gold
+    ];
+    
     const newParticles = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 12; i++) {
       newParticles.push({
         x: x * SCALE + SCALE / 2,
         y: y * SCALE + SCALE / 2,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8,
-        life: 30,
-        color: `hsl(${Math.random() * 60 + 300}, 100%, 60%)`
+        vx: (Math.random() - 0.5) * 10,
+        vy: (Math.random() - 0.5) * 10,
+        life: 40,
+        color: succinctColors[Math.floor(Math.random() * succinctColors.length)],
+        size: Math.random() * 4 + 2
       });
     }
     setParticles(prev => [...prev, ...newParticles]);
@@ -94,7 +105,11 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       }
       createParticles(apple[0], apple[1]);
       setGlitchEffect(true);
-      setTimeout(() => setGlitchEffect(false), 200);
+      setZkProofEffect(true);
+      setTimeout(() => {
+        setGlitchEffect(false);
+        setZkProofEffect(false);
+      }, 300);
       return { apple: newApple, scored: true };
     }
     return { apple, scored: false };
@@ -152,7 +167,8 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
           x: p.x + p.vx,
           y: p.y + p.vy,
           vy: p.vy + 0.3,
-          life: p.life - 1
+          life: p.life - 1,
+          size: p.size * 0.98
         })).filter(p => p.life > 0)
       );
     }, 50);
@@ -199,56 +215,105 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
     return () => document.removeEventListener('keydown', moveSnake);
   }, [moveSnake]);
 
-  // Draw game
+  // Draw game with Succinct styling
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     
-    // Clear canvas with glitch effect
+    // Clear canvas with Succinct gradient background
     if (glitchEffect) {
-      ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 10%)`;
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      gradient.addColorStop(0, `hsl(${Math.random() * 360}, 100%, 10%)`);
+      gradient.addColorStop(1, `hsl(${Math.random() * 360}, 100%, 5%)`);
+      ctx.fillStyle = gradient;
     } else {
-      ctx.fillStyle = '#0a0a0a';
+      const gradient = ctx.createLinearGradient(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+      gradient.addColorStop(0, '#0a0a0a');
+      gradient.addColorStop(0.5, '#1a0a2e');
+      gradient.addColorStop(1, '#0a0a0a');
+      ctx.fillStyle = gradient;
     }
     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-    // Draw grid with glow effect
-    ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)';
-    ctx.lineWidth = 1;
+    // Draw Succinct-themed grid
+    ctx.strokeStyle = zkProofEffect ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.15)';
+    ctx.lineWidth = zkProofEffect ? 2 : 1;
+    
     for (let i = 0; i <= CANVAS_SIZE; i += SCALE) {
+      // Vertical lines
       ctx.beginPath();
       ctx.moveTo(i, 0);
       ctx.lineTo(i, CANVAS_SIZE);
       ctx.stroke();
+      
+      // Horizontal lines
       ctx.beginPath();
       ctx.moveTo(0, i);
       ctx.lineTo(CANVAS_SIZE, i);
       ctx.stroke();
     }
 
-    // Draw snake with neon glow
+    // Draw snake with Succinct gradient
     snake.forEach((segment, index) => {
-      const hue = (index * 10 + Date.now() * 0.1) % 360;
-      ctx.shadowBlur = 20;
-      ctx.shadowColor = `hsl(${hue}, 100%, 50%)`;
-      ctx.fillStyle = `hsl(${hue}, 100%, 50%)`;
+      const isHead = index === snake.length - 1;
+      const progress = index / (snake.length - 1);
+      
+      // Succinct gradient colors
+      const hue = 271 + (progress * 100); // Purple to cyan range
+      const saturation = 91 - (progress * 20);
+      const lightness = 65 - (progress * 30);
+      
+      ctx.shadowBlur = isHead ? 30 : 15;
+      ctx.shadowColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      ctx.fillStyle = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      
+      if (zkProofEffect) {
+        ctx.shadowBlur = 40;
+        ctx.shadowColor = '#8b5cf6';
+      }
+      
       ctx.fillRect(segment[0] * SCALE + 2, segment[1] * SCALE + 2, SCALE - 4, SCALE - 4);
       
-      // Inner glow
-      ctx.shadowBlur = 5;
-      ctx.fillStyle = `hsl(${hue}, 100%, 80%)`;
-      ctx.fillRect(segment[0] * SCALE + 6, segment[1] * SCALE + 6, SCALE - 12, SCALE - 12);
+      // Inner glow for head
+      if (isHead) {
+        ctx.shadowBlur = 5;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(segment[0] * SCALE + 8, segment[1] * SCALE + 8, SCALE - 16, SCALE - 16);
+        
+        // Add "S" for Succinct on head
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#000000';
+        ctx.font = '12px Orbitron, monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('S', 
+          segment[0] * SCALE + SCALE/2, 
+          segment[1] * SCALE + SCALE/2 + 4
+        );
+      }
     });
 
-    // Draw apple with pulsing effect
+    // Draw apple with Succinct branding
     const time = Date.now() * 0.01;
-    const pulseScale = 1 + Math.sin(time) * 0.2;
+    const pulseScale = 1 + Math.sin(time) * 0.3;
     const appleSize = SCALE * pulseScale;
     const offset = (SCALE - appleSize) / 2;
     
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = '#ff0080';
-    ctx.fillStyle = '#ff0080';
+    // Multi-color Succinct apple
+    const gradient = ctx.createRadialGradient(
+      apple[0] * SCALE + SCALE/2, 
+      apple[1] * SCALE + SCALE/2, 
+      0,
+      apple[0] * SCALE + SCALE/2, 
+      apple[1] * SCALE + SCALE/2, 
+      appleSize/2
+    );
+    gradient.addColorStop(0, '#ec4899'); // pink
+    gradient.addColorStop(0.5, '#8b5cf6'); // purple
+    gradient.addColorStop(1, '#06b6d4'); // cyan
+    
+    ctx.shadowBlur = zkProofEffect ? 50 : 25;
+    ctx.shadowColor = '#8b5cf6';
+    ctx.fillStyle = gradient;
     ctx.fillRect(
       apple[0] * SCALE + offset, 
       apple[1] * SCALE + offset, 
@@ -256,50 +321,64 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
       appleSize
     );
 
-    // Draw particles
+    // Draw particles with Succinct colors
     particles.forEach(particle => {
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 15;
       ctx.shadowColor = particle.color;
       ctx.fillStyle = particle.color;
-      ctx.fillRect(particle.x - 2, particle.y - 2, 4, 4);
+      const size = particle.size * (particle.life / 40);
+      ctx.fillRect(
+        particle.x - size/2, 
+        particle.y - size/2, 
+        size, 
+        size
+      );
     });
 
     // Reset shadow
     ctx.shadowBlur = 0;
-  }, [snake, apple, glitchEffect, particles]);
+  }, [snake, apple, glitchEffect, particles, zkProofEffect]);
 
   return (
     <div className="flex flex-col items-center space-y-4 p-6">
-      {/* Score Display */}
+      {/* Score Display with Succinct branding */}
       <div className="text-center">
-        <div className={`text-4xl font-bold ${glitchEffect ? 'animate-pulse' : ''} text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400`}>
+        <div className={`text-5xl font-bold ${glitchEffect ? 'animate-pulse succinct-glitch' : ''} ${zkProofEffect ? 'text-purple-400' : 'gradient-text-succinct'} succinct-font`}>
           SCORE: {score}
         </div>
+        {zkProofEffect && (
+          <div className="text-sm text-purple-400 animate-pulse mt-2 succinct-font">
+            ✅ ZK PROOF VERIFIED
+          </div>
+        )}
         {walletAddress && (
-          <div className="text-sm text-gray-400 mt-2">
+          <div className="text-sm text-gray-400 mt-2 font-mono">
             Player: {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
           </div>
         )}
       </div>
 
-      {/* Game Canvas */}
+      {/* Game Canvas with Succinct styling */}
       <div className="relative">
         <canvas 
           ref={canvasRef}
           width={CANVAS_SIZE}
           height={CANVAS_SIZE}
-          className={`border-2 border-cyan-400 rounded-lg shadow-lg shadow-cyan-400/50 ${glitchEffect ? 'animate-ping' : ''}`}
+          className={`border-2 ${zkProofEffect ? 'border-purple-400 shadow-purple-400/50' : 'border-cyan-400 shadow-cyan-400/50'} rounded-lg shadow-lg ${glitchEffect ? 'animate-ping' : ''} succinct-glow`}
         />
         
         {/* Game Over Overlay */}
         {gameOver && (
-          <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center rounded-lg">
+          <div className="absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center rounded-lg backdrop-blur-succinct">
             <div className="text-center text-white">
-              <h2 className="text-3xl font-bold text-red-400 mb-4 animate-pulse">GAME OVER</h2>
-              <p className="text-xl mb-4">Final Score: {score}</p>
+              <h2 className="text-4xl font-bold text-red-400 mb-4 animate-pulse game-over-text succinct-title">
+                GAME OVER
+              </h2>
+              <p className="text-2xl mb-2 succinct-font">Final Score: {score}</p>
+              <p className="text-lg mb-6 text-purple-300">ZK Proof Generated ✅</p>
               <button 
                 onClick={startGame}
-                className="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-bold rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+                className="px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white font-bold rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 succinct-button"
               >
                 PLAY AGAIN
               </button>
@@ -309,25 +388,36 @@ const SnakeGame = ({ walletAddress, onGameEnd }) => {
 
         {/* Start Game Overlay */}
         {!isPlaying && !gameOver && (
-          <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center rounded-lg">
+          <div className="absolute inset-0 bg-black bg-opacity-90 flex items-center justify-center rounded-lg backdrop-blur-succinct">
             <div className="text-center text-white">
-              <h2 className="text-3xl font-bold text-cyan-400 mb-4 animate-pulse">SNAKE BLOCKCHAIN</h2>
-              <p className="text-lg mb-4">Use arrow keys to control</p>
+              <h2 className="text-4xl font-bold text-cyan-400 mb-4 animate-pulse succinct-title">
+                SUCCINCT SNAKE
+              </h2>
+              <p className="text-lg mb-2">Use arrow keys to control</p>
+              <p className="text-sm mb-6 text-purple-300">Powered by ZK proofs & Monad network</p>
               <button 
                 onClick={startGame}
-                className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-500 text-white font-bold rounded-lg hover:from-cyan-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105"
+                className="px-8 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 text-white font-bold rounded-xl hover:from-purple-600 hover:via-pink-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 succinct-button"
               >
                 START GAME
               </button>
             </div>
           </div>
         )}
+
+        {/* ZK Proof indicator */}
+        {zkProofEffect && (
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white px-3 py-1 rounded-full text-xs animate-bounce succinct-font">
+            ZK PROOF ✨
+          </div>
+        )}
       </div>
 
       {/* Controls Info */}
       <div className="text-center text-gray-400 text-sm">
-        <p>Use ↑ ↓ ← → keys to control the snake</p>
-        <p className="mt-1">Collect the glowing orbs to increase your score!</p>
+        <p className="succinct-font">Use ↑ ↓ ← → keys to control the snake</p>
+        <p className="mt-1">Collect the glowing orbs to increase your score! 🌟</p>
+        <p className="mt-1 text-purple-400 text-xs">Every score is verified with zero-knowledge proofs</p>
       </div>
     </div>
   );
